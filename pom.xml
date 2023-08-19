@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <groupId>rinha-backend</groupId>
+   <artifactId>jetty-servlet</artifactId>
+   <version>1.0-SNAPSHOT</version>
+   <packaging>war</packaging>
+   <name>jetty-servlet</name>
+   <description></description>
+
+   <properties>
+      <!-- Global Maven settings -->
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+      <maven.compiler.release>19</maven.compiler.release>
+
+      <!-- Official Maven Plugins -->
+      <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+      <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+      <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
+
+      <!-- Eclipse Jetty Maven plugin -->
+      <jetty-maven-plugin.version>11.0.15</jetty-maven-plugin.version>
+   </properties>
+   <dependencies>
+      <dependency>
+         <groupId>jakarta.servlet</groupId>
+         <artifactId>jakarta.servlet-api</artifactId>
+         <version>6.0.0</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.projectlombok</groupId>
+         <artifactId>lombok</artifactId>
+         <version>1.18.28</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.alibaba</groupId>
+         <artifactId>fastjson</artifactId>
+         <version>2.0.31</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.github.f4b6a3</groupId>
+         <artifactId>uuid-creator</artifactId>
+         <version>5.2.0</version>
+      </dependency>
+
+      <dependency>
+         <groupId>jakarta.validation</groupId>
+         <artifactId>jakarta.validation-api</artifactId>
+         <version>3.0.2</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.hibernate.validator</groupId>
+         <artifactId>hibernate-validator</artifactId>
+         <version>8.0.1.Final</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.zaxxer</groupId>
+         <artifactId>HikariCP</artifactId>
+         <version>5.0.1</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.postgresql</groupId>
+         <artifactId>postgresql</artifactId>
+         <version>42.6.0</version>
+      </dependency>
+
+
+
+   </dependencies>
+
+   <build>
+      <finalName>${project.artifactId}</finalName>
+      <pluginManagement>
+         <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <version>${maven-compiler-plugin.version}</version>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-war-plugin</artifactId>
+               <version>${maven-war-plugin.version}</version>
+            </plugin>
+            <plugin>
+               <groupId>org.eclipse.jetty</groupId>
+               <artifactId>jetty-maven-plugin</artifactId>
+               <version>${jetty-maven-plugin.version}</version>
+               <!-- configuration> <deployMode>EMBED</deployMode> <useProvidedScope>true</useProvidedScope> <httpConnector> 
+                  <port>9090</port> </httpConnector> </configuration -->
+               <configuration>
+                  <stopPort>8080</stopPort>
+               </configuration>
+            </plugin>
+         </plugins>
+      </pluginManagement>
+   </build>
+</project>
