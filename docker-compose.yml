@@ -15,35 +15,31 @@ services:
       resources:
         limits:
           cpus: '0.7'
-          memory: '0.3GB'
+          memory: '0.7GB'
  
  api1:
     image: rinha-backend-servlet 
     container_name: api1
     hostname:  api1
-#    volumes:
-#        - /home/david/.m2/:/root/.m2/ 
     depends_on:
         - dp
     deploy:
       resources:
         limits:
           cpus: '0.3'
-          memory: '1.2GB'
+          memory: '1.0GB'
 
  api2:
     image: rinha-backend-servlet 
     container_name: api2
     hostname:  api2
-#    volumes:
-#        - /home/david/.m2/:/root/.m2/ 
     depends_on:
         - dp
     deploy:
       resources:
         limits:
           cpus: '0.3'
-          memory: '1.2GB'
+          memory: '1.0GB'
 
  nginx:
     image: nginx 
