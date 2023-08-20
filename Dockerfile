@@ -4,11 +4,11 @@ WORKDIR /app
 COPY src /app/src
 COPY pom.xml /app
 
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests assembly:single
 
 FROM eclipse-temurin:20-jdk-alpine
 
-COPY --from=build /app/target/rinha-backend-jetty-servlet*.jar rinha-backend-jetty-servlet.jar
+COPY --from=build /app/target/rinha-backend-jetty-servlet-jar-with-dependencies.jar rinha-backend-jetty-servlet-jar-with-dependencies.jar 
 
 EXPOSE 8080
-ENTRYPOINT [ "java", "-XX:+UseParallelGC", "-XX:MaxRAMPercentage=75", "--enable-preview", "-jar", "rinha-backend-jetty-servlet.jar" ]
+ENTRYPOINT [ "java", "-XX:+UseParallelGC", "-XX:MaxRAMPercentage=75", "--enable-preview", "-jar", "rinha-backend-jetty-servlet-jar-with-dependencies.jar" ]
