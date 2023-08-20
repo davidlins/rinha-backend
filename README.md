@@ -2,8 +2,8 @@
 
 O [@zanfranceschi](https://twitter.com/zanfranceschi) lançou a braba no twitter e a galera da bolhadev abraçou.
 
-Na hora pensei, vou fazer sem framework, so servlet e jdbc e nasceu essa bagaça. 
- 
+Na hora pensei, vou fazer sem framework, so servlet e jdbc e nasceu essa bagaça. Mas teve maluco que fez em [bash](https://github.com/leandronsp/rinha-backend-bash)
+
 ## Desafio
 
 Para mais detalhes: [rinha do backend](https://github.com/zanfranceschi/rinha-de-backend-2023-q3)
