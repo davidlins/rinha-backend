@@ -53,20 +53,24 @@ public class PessoaServlet extends HttpServlet {
         this.pessoaRepository = pessoaRepository;
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-        if (request.getRequestURI().startsWith("/contagem-pessoas")) {
-            count(request, response);
-        } else if (request.getPathInfo() != null) {
-            show(request.getPathInfo().substring(1), request, response);
+        if (request.getMethod().equals("POST")) {
+            insert(request, response);
         } else {
-            list(request, response);
+            if (request.getRequestURI().startsWith("/contagem-pessoas")) {
+                count(request, response);
+            } else if (request.getPathInfo() == null) {
+                list(request, response);
+            } else {
+                show(request.getPathInfo().substring(1), request, response);
+            }    
         }
-
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    private void insert(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         try {
@@ -105,7 +109,7 @@ public class PessoaServlet extends HttpServlet {
 
     }
 
-    protected void show(String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void show(String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
             var pessoa = this.pessoasMap.get(id);
@@ -133,7 +137,7 @@ public class PessoaServlet extends HttpServlet {
 
     }
 
-    protected void list(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void list(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         var termo = request.getParameter("t");
         if (termo != null && termo.trim().length() > 0) {
@@ -155,7 +159,7 @@ public class PessoaServlet extends HttpServlet {
 
     }
 
-    protected void count(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void count(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
             var count = this.pessoaRepository.count();
