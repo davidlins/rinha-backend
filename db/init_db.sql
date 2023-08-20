@@ -9,7 +9,7 @@ CREATE TABLE pessoas (
 	nascimento DATE NOT NULL,
 	stack TEXT NULL,
 	text_searchable TEXT GENERATED ALWAYS AS (  
-	    lower(apelido) || ' ' || lower(nome) || ' ' || lower(COALESCE(stack, ' '))
+	    lower(apelido || ' ' || nome || ' ' || COALESCE(stack, ' '))
 	) STORED,
 	PRIMARY KEY (id),
 	UNIQUE(apelido)
