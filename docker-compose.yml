@@ -17,7 +17,7 @@ services:
           cpus: '0.7'
           memory: '0.7GB'
  
- api1:
+ api1: &api
     image: rinha-backend-servlet 
     container_name: api1
     hostname:  api1
@@ -29,17 +29,10 @@ services:
           cpus: '0.3'
           memory: '1.0GB'
 
- api2:
-    image: rinha-backend-servlet 
+ api2: 
+    <<: *api
     container_name: api2
-    hostname:  api2
-    depends_on:
-        - dp
-    deploy:
-      resources:
-        limits:
-          cpus: '0.3'
-          memory: '1.0GB'
+
 
  nginx:
     image: nginx 
