@@ -12,7 +12,10 @@ import static rinha.controllers.HttpStatus.UNPROCESSABLE_CONTENT;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONException;
@@ -36,6 +39,8 @@ public class PessoaServlet extends HttpServlet {
 
     private PessoaRepository pessoaRepository;
     private Validator validator;
+    private Map<String, Pessoa> pessoasMap = new ConcurrentHashMap<>();
+    private Set<String> apelidos = Collections.synchronizedSet(new HashSet<>());
 
     public PessoaServlet() {
         super();
@@ -71,6 +76,8 @@ public class PessoaServlet extends HttpServlet {
             if (responseError == null) {
                 try {
                     this.pessoaRepository.save(pessoa);
+                    this.pessoasMap.put(pessoa.getId(), pessoa);
+                    this.apelidos.add(pessoa.getApelido());
                     doResponse(response, CREATED.getCode(), pessoa,
                             singletonMap("Location", "/pessoas/" + pessoa.getId()));
                 } catch (SQLException e) {
@@ -79,6 +86,7 @@ public class PessoaServlet extends HttpServlet {
                     var httpStatus = INTERNAL_SERVER_ERRORS;
                     if (e.getMessage().indexOf("pessoas_apelido_key") >= 0) {
                         httpStatus = UNPROCESSABLE_CONTENT;
+                        this.apelidos.add(pessoa.getApelido());
                     }
 
                     responseError = ResponseError.builder().code(httpStatus.getCode())
@@ -100,7 +108,13 @@ public class PessoaServlet extends HttpServlet {
     protected void show(String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
-            var pessoa = this.pessoaRepository.findById(id);
+            var pessoa = this.pessoasMap.get(id);
+            if (pessoa == null) {
+                pessoa = this.pessoaRepository.findById(id);
+                if(pessoa != null && !apelidos.contains(pessoa.getApelido())) {
+                    apelidos.add(pessoa.getApelido());
+                }
+            }
 
             if (pessoa != null) {
                 doResponse(response, OK.getCode(), pessoa, null);
@@ -161,7 +175,9 @@ public class PessoaServlet extends HttpServlet {
 
         var constraintViolations = validator.validate(pessoa);
         if (constraintViolations == null || constraintViolations.isEmpty()) {
-            return null;
+            return (!apelidos.contains(pessoa.getApelido())) ? null
+                    : ResponseError.builder().code(UNPROCESSABLE_CONTENT.getCode())
+                            .errors(Collections.singletonList("Apeliodo duplicado")).build();
         }
 
         return ResponseError.builder().code(UNPROCESSABLE_CONTENT.getCode())
