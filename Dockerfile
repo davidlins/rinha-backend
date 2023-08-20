@@ -11,4 +11,4 @@ FROM eclipse-temurin:20-jdk-alpine
 COPY --from=build /app/target/rinha-backend-jetty-servlet-jar-with-dependencies.jar rinha-backend-jetty-servlet-jar-with-dependencies.jar 
 
 EXPOSE 8080
-ENTRYPOINT [ "java", "-XX:+UseParallelGC", "-XX:MaxRAMPercentage=75", "--enable-preview", "-jar", "rinha-backend-jetty-servlet-jar-with-dependencies.jar" ]
+ENTRYPOINT [ "java", "--enable-preview", "-jar", "rinha-backend-jetty-servlet-jar-with-dependencies.jar" ]
