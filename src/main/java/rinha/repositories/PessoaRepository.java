@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -21,7 +22,7 @@ import rinha.models.Pessoa;
 public class PessoaRepository {
 
     private HikariDataSource ds = new HikariDataSource(new HikariConfig("/hikari.properties"));
-    private static final String SQL_INSERT = "insert into pessoas (apelido, nome, nascimento, stack, text_searchable) values (?, ?, ?, ?, ?)";
+    private static final String SQL_INSERT = "insert into pessoas (id, apelido, nome, nascimento, stack, text_searchable) values (?, ?, ?, ?, ?, ?)";
     private static final String SQL_FIND_BY_ID = "select apelido, nome, nascimento, stack  from pessoas where id = '";
     private static final String SQL_FIND_BY_TERMO = "select id, apelido, nome, nascimento, stack  from pessoas where text_searchable like ''%{0}%'' limit 50";
     private static final String SQL_COUNT = "select count(*) from pessoas";
@@ -36,20 +37,16 @@ public class PessoaRepository {
                     ? pessoa.getStack().stream().collect(joining("|"))
                     : null); 
             
-            pstmt.setString(1, pessoa.getApelido());
-            pstmt.setString(2, pessoa.getNome());
-            pstmt.setDate(3, Date.valueOf(pessoa.getNascimento()));
-            pstmt.setString(4,staks );
-            pstmt.setString(5,  pessoa.getApelido().toLowerCase() + " "+pessoa.getNome().toLowerCase()+ " "+((staks != null)? staks: ""));
+            var uuid = UUID.randomUUID().toString();
+            pessoa.setId(uuid);
+            pstmt.setString(1, uuid);
+            pstmt.setString(2, pessoa.getApelido());
+            pstmt.setString(3, pessoa.getNome());
+            pstmt.setDate(4, Date.valueOf(pessoa.getNascimento()));
+            pstmt.setString(5,staks );
+            pstmt.setString(6,  pessoa.getApelido().toLowerCase() + " "+pessoa.getNome().toLowerCase()+ " "+((staks != null)? staks.toLowerCase(): ""));
             
-            int affectedRows = pstmt.executeUpdate();
-            if (affectedRows > 0) {
-                try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        pessoa.setId(rs.getString(1));
-                    }
-                }
-            }
+            pstmt.executeUpdate();
         }
     }
 

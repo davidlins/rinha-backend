@@ -8,12 +8,12 @@ CREATE TABLE pessoas (
 	nome VARCHAR(100) NOT NULL,
 	nascimento DATE NOT NULL,
 	stack TEXT NULL,
-	text_searchable TEXT NOT NULL,
+	text_searchable TEXT NULL,
 	UNIQUE(apelido)
 );
 
 
-CREATE INDEX text_searchable_idx ON pessoas USING GIN (text_searchable);
+CREATE INDEX text_searchable_idx ON pessoas USING GIST (text_searchable);
 
 
 
