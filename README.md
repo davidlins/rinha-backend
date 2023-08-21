@@ -41,7 +41,7 @@ $ ./run-test.sh
 
 ## Agradecimentos
 
-Primeiro para o [@zanfranceschi](https://twitter.com/zanfranceschi) que através dessa brincadeira fomentou uma troca de conhecimento em a bolhadev, eu aprendi muito nesse desafio, implementando minha solução, chupinhando os amiguihos e vendo soluções em outras stacks.
+Primeiro para o [@zanfranceschi](https://twitter.com/zanfranceschi) que através dessa brincadeira fomentou uma troca de conhecimento em a bolhadev, eu aprendi muito nesse desafio, implementando minha solução, chupinhando os amiguinhos e vendo soluções em outras stacks.
 
 A esse [@rinhadebackend](https://twitter.com/rinhadebackend) que agregou toda a treta (do bem) no twitter.
 
