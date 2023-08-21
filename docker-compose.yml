@@ -19,8 +19,9 @@ services:
           memory: '0.9GB'
  
  api1: &api
-    build:
-        context: .
+    #build:
+    #    context: .
+    image: davidlins/rinha-backend-servlet
     container_name: api1
     hostname:  api1
     ulimits:
