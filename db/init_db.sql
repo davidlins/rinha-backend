@@ -3,18 +3,17 @@ CREATE EXTENSION btree_gist;
 DROP TABLE IF EXISTS pessoas;
 
 CREATE TABLE pessoas (
-	id uuid DEFAULT gen_random_uuid (),
+	id VARCHAR(40) PRIMARY KEY,
 	apelido VARCHAR(32) NOT NULL,
 	nome VARCHAR(100) NOT NULL,
 	nascimento DATE NOT NULL,
 	stack TEXT NULL,
-	text_searchable TEXT GENERATED ALWAYS AS (  
-	    lower(apelido || ' ' || nome || ' ' || COALESCE(stack, ' '))
-	) STORED,
-	PRIMARY KEY (id),
+	text_searchable TEXT NOT NULL,
 	UNIQUE(apelido)
 );
 
 
-CREATE INDEX text_searchable_idx ON pessoas USING GIST (text_searchable);
+CREATE INDEX text_searchable_idx ON pessoas USING GIN (text_searchable);
+
+
 

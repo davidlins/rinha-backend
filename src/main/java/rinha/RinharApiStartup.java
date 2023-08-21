@@ -16,11 +16,12 @@ public class RinharApiStartup {
 
     public static void main(String[] args) throws Exception {
 
-        var threadPool = new QueuedThreadPool(3000);
-        threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
+        //var threadPool = new QueuedThreadPool(2500);
+        //threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
+        //var server = new Server(threadPool);
 
-        var server = new Server(threadPool);
-
+        var server = new Server();
+        
         var httpPort = (System.getProperties().containsKey(HTTP_PORT_KEY)) ? System.getProperty(HTTP_PORT_KEY)
                 : System.getenv("http.port");
 
@@ -32,6 +33,7 @@ public class RinharApiStartup {
         server.setHandler(context);
 
         var servletHolder = new ServletHolder("PessoaServlet", PessoaServlet.class);
+        servletHolder.setInitOrder(1);
         context.addServlet(servletHolder, "/pessoas/*");
         context.addServlet(servletHolder, "/contagem-pessoas");
 

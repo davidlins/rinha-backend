@@ -21,7 +21,7 @@ import rinha.models.Pessoa;
 public class PessoaRepository {
 
     private HikariDataSource ds = new HikariDataSource(new HikariConfig("/hikari.properties"));
-    private static final String SQL_INSERT = "insert into pessoas (apelido, nome, nascimento, stack) values (?, ?, ?, ?)";
+    private static final String SQL_INSERT = "insert into pessoas (apelido, nome, nascimento, stack, text_searchable) values (?, ?, ?, ?, ?)";
     private static final String SQL_FIND_BY_ID = "select apelido, nome, nascimento, stack  from pessoas where id = '";
     private static final String SQL_FIND_BY_TERMO = "select id, apelido, nome, nascimento, stack  from pessoas where text_searchable like ''%{0}%'' limit 50";
     private static final String SQL_COUNT = "select count(*) from pessoas";
@@ -32,14 +32,16 @@ public class PessoaRepository {
                 PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT,
                         Statement.RETURN_GENERATED_KEYS)) {
 
+            var staks = (pessoa.getStack() != null && !pessoa.getStack().isEmpty()
+                    ? pessoa.getStack().stream().collect(joining("|"))
+                    : null); 
+            
             pstmt.setString(1, pessoa.getApelido());
             pstmt.setString(2, pessoa.getNome());
             pstmt.setDate(3, Date.valueOf(pessoa.getNascimento()));
-            pstmt.setString(4,
-                    (pessoa.getStack() != null && !pessoa.getStack().isEmpty()
-                            ? pessoa.getStack().stream().collect(joining("|"))
-                            : null));
-
+            pstmt.setString(4,staks );
+            pstmt.setString(5,  pessoa.getApelido().toLowerCase() + " "+pessoa.getNome().toLowerCase()+ " "+((staks != null)? staks: ""));
+            
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
@@ -59,6 +61,8 @@ public class PessoaRepository {
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(SQL_FIND_BY_ID + id + "'");) {
 
+            
+            
             if (rs.next()) {
 
                 String stack = rs.getString("stack");
