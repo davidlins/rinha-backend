@@ -5,7 +5,7 @@ import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 
-import rinha.controllers.PessoaServlet;
+import rinha.controllers.PessoaServletAsync;
 
 public class RinharApiStartup {
 
@@ -29,7 +29,7 @@ public class RinharApiStartup {
         var context = new ServletContextHandler("/");
         server.setHandler(context);
 
-        var servletHolder = new ServletHolder("PessoaServlet", PessoaServlet.class);
+        var servletHolder = new ServletHolder("PessoaServlet", PessoaServletAsync.class);
         servletHolder.setInitOrder(1);
         context.addServlet(servletHolder, "/pessoas/*");
         context.addServlet(servletHolder, "/contagem-pessoas");
