@@ -1,9 +1,12 @@
 package rinha;
 
+import java.util.concurrent.Executors;
+
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import rinha.controllers.PessoaServletAsync;
 
@@ -13,11 +16,14 @@ public class RinharApiStartup {
 
     public static void main(String[] args) throws Exception {
 
-        //var threadPool = new QueuedThreadPool(2500);
-        //threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
-        //var server = new Server(threadPool);
+        Thread.sleep(10000); // precisa remover depois de acertar o depends-on e retryconnection, pois com virtualthread esta subindo muito rapido 
+        
+        var threadPool = new QueuedThreadPool();
+        threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
+        var server = new Server(threadPool);
 
-        var server = new Server();
+//        var server = new Server();
+
         
         var httpPort = (System.getProperties().containsKey(HTTP_PORT_KEY)) ? System.getProperty(HTTP_PORT_KEY)
                 : System.getenv("http.port");

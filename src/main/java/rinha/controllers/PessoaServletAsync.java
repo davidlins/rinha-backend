@@ -42,8 +42,8 @@ public class PessoaServletAsync extends HttpServlet {
 
     private PessoaRepository pessoaRepository;
     private Validator validator;
-    private Map<String, Pessoa> pessoasMap = new ConcurrentHashMap<>();
-    private Set<String> apelidos = Collections.synchronizedSet(new HashSet<>());
+    private static Map<String, Pessoa> pessoasMap = new ConcurrentHashMap<>();
+    private static Set<String> apelidos = Collections.synchronizedSet(new HashSet<>());
 
     public PessoaServletAsync() {
         super();
