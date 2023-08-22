@@ -1,6 +1,5 @@
 package rinha.controllers;
 
-import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
 import static rinha.controllers.HttpStatus.BAD_REQUEST;
 import static rinha.controllers.HttpStatus.CREATED;
@@ -86,8 +85,8 @@ public class PessoaServletAsync extends HttpServlet {
             if (responseError == null) {
                 try {
                     this.pessoaRepository.save(pessoa);
-                    this.pessoasMap.put(pessoa.getId(), pessoa);
-                    this.apelidos.add(pessoa.getApelido());
+                    pessoasMap.put(pessoa.getId(), pessoa);
+                    apelidos.add(pessoa.getApelido());
                     doResponse(async, response, CREATED.getCode(), pessoa,
                             singletonMap("Location", "/pessoas/" + pessoa.getId()));
                 } catch (SQLException e) {
@@ -96,21 +95,28 @@ public class PessoaServletAsync extends HttpServlet {
                     var httpStatus = INTERNAL_SERVER_ERRORS;
                     if (e.getMessage().indexOf("pessoas_apelido_key") >= 0) {
                         httpStatus = UNPROCESSABLE_CONTENT;
-                        this.apelidos.add(pessoa.getApelido());
+                        apelidos.add(pessoa.getApelido());
                     }
 
-                    responseError = ResponseError.builder().code(httpStatus.getCode())
-                            .errors(Collections.singletonList(e.getMessage())).build();
+//                    responseError = ResponseError.builder().code(httpStatus.getCode())
+//                            .errors(Collections.singletonList(e.getMessage())).build();
+//
+//                    doResponse(async, response, responseError.getCode(), responseError, null);
 
-                    doResponse(async, response, responseError.getCode(), responseError, null);
+                    doResponse(async, response, httpStatus.getCode(), null,
+                            null);
                 }
             } else {
-                doResponse(async, response, responseError.getCode(), responseError, null);
+                // doResponse(async, response, responseError.getCode(), responseError, null);
+                doResponse(async, response, responseError.getCode(), null,
+                        null);
             }
 
         } catch (JSONException e) {
-            doResponse(async, response, BAD_REQUEST.getCode(), ResponseError.builder().code(BAD_REQUEST.getCode())
-                    .errors(singletonList("Json invalido")).build(), null);
+//            doResponse(async, response, BAD_REQUEST.getCode(), ResponseError.builder().code(BAD_REQUEST.getCode())
+//                    .errors(singletonList("Json invalido")).build(), null);
+            doResponse(async, response, BAD_REQUEST.getCode(), null,
+                    null);
         }
 
     }
@@ -120,7 +126,7 @@ public class PessoaServletAsync extends HttpServlet {
         AsyncContext async = request.startAsync();
 
         try {
-            var pessoa = this.pessoasMap.get(id);
+            var pessoa = pessoasMap.get(id);
             if (pessoa == null) {
                 pessoa = this.pessoaRepository.findById(id);
                 if (pessoa != null && !apelidos.contains(pessoa.getApelido())) {
@@ -131,15 +137,19 @@ public class PessoaServletAsync extends HttpServlet {
             if (pessoa != null) {
                 doResponse(async, response, OK.getCode(), pessoa, null);
             } else {
-                doResponse(async, response, NOT_FOUND.getCode(), ResponseError.builder().code(NOT_FOUND.getCode())
-                        .errors(Collections.singletonList("Não encontrou pessoa com id: " + id)).build(), null);
+//                doResponse(async, response, NOT_FOUND.getCode(), ResponseError.builder().code(NOT_FOUND.getCode())
+//                        .errors(Collections.singletonList("Não encontrou pessoa com id: " + id)).build(), null);
+                doResponse(async, response, NOT_FOUND.getCode(), null,
+                        null);
             }
         } catch (SQLException e) {
             // e.printStackTrace();
-            doResponse(async, response, INTERNAL_SERVER_ERRORS.getCode(),
-                    ResponseError.builder().code(INTERNAL_SERVER_ERRORS.getCode())
-                            .errors(Collections.singletonList("Erro ao consultar pessoa: " + e.getMessage()))
-                            .build(),
+//            doResponse(async, response, INTERNAL_SERVER_ERRORS.getCode(),
+//                    ResponseError.builder().code(INTERNAL_SERVER_ERRORS.getCode())
+//                            .errors(Collections.singletonList("Erro ao consultar pessoa: " + e.getMessage()))
+//                            .build(),
+//                    null);
+            doResponse(async, response, INTERNAL_SERVER_ERRORS.getCode(), null,
                     null);
         }
 
@@ -156,15 +166,19 @@ public class PessoaServletAsync extends HttpServlet {
                 doResponse(async, response, OK.getCode(), pessoas, null);
             } catch (SQLException e) {
                 // e.printStackTrace();
-                doResponse(async, response, INTERNAL_SERVER_ERRORS.getCode(),
-                        ResponseError.builder().code(INTERNAL_SERVER_ERRORS.getCode())
-                                .errors(Collections.singletonList("Erro ao consultar pessoas: " + e.getMessage()))
-                                .build(),
+//                doResponse(async, response, INTERNAL_SERVER_ERRORS.getCode(),
+//                        ResponseError.builder().code(INTERNAL_SERVER_ERRORS.getCode())
+//                                .errors(Collections.singletonList("Erro ao consultar pessoas: " + e.getMessage()))
+//                                .build(),
+//                        null);
+                doResponse(async, response, INTERNAL_SERVER_ERRORS.getCode(), null,
                         null);
             }
         } else {
-            doResponse(async, response, BAD_REQUEST.getCode(), ResponseError.builder().code(BAD_REQUEST.getCode())
-                    .errors(Collections.singletonList("Pamametro 't' é obrigatório")).build(), null);
+//            doResponse(async, response, BAD_REQUEST.getCode(), ResponseError.builder().code(BAD_REQUEST.getCode())
+//                    .errors(Collections.singletonList("Pamametro 't' é obrigatório")).build(), null);
+            doResponse(async, response, BAD_REQUEST.getCode(), null,
+                    null);
         }
 
     }
@@ -175,8 +189,7 @@ public class PessoaServletAsync extends HttpServlet {
 
         try {
             var count = this.pessoaRepository.count();
-            
-            
+
             ServletOutputStream out = response.getOutputStream();
             out.setWriteListener(new WriteListener() {
                 @Override
@@ -196,10 +209,12 @@ public class PessoaServletAsync extends HttpServlet {
 
         } catch (SQLException e) {
             // e.printStackTrace();
-            doResponse(async, response, INTERNAL_SERVER_ERRORS.getCode(),
-                    ResponseError.builder().code(INTERNAL_SERVER_ERRORS.getCode())
-                            .errors(Collections.singletonList("Erro ao consultar qtd pessoas: " + e.getMessage()))
-                            .build(),
+//            doResponse(async, response, INTERNAL_SERVER_ERRORS.getCode(),
+//                    ResponseError.builder().code(INTERNAL_SERVER_ERRORS.getCode())
+//                            .errors(Collections.singletonList("Erro ao consultar qtd pessoas: " + e.getMessage()))
+//                            .build(),
+//                    null);
+            doResponse(async, response, INTERNAL_SERVER_ERRORS.getCode(), null,
                     null);
         }
     }
@@ -231,7 +246,11 @@ public class PessoaServletAsync extends HttpServlet {
                 }
                 response.setStatus(httpStatusCode);
                 response.setContentType(JSON_CONTENT_TYPE);
-                JSON.writeTo(out, bodyObject);
+                if (bodyObject != null) {
+                    JSON.writeTo(out, bodyObject);
+                } else {
+                    out.print("{}");
+                }
                 async.complete();
             }
 
