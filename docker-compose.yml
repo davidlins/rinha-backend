@@ -25,9 +25,9 @@ services:
 #      start_period: 10s    
 
  api1: &api
-    #build:
-    #    context: .
-    image: davidlins/rinha-backend-servlet
+    build:
+        context: .
+    #image: davidlins/rinha-backend-servlet
     container_name: api1
     hostname:  api1
     ulimits:
