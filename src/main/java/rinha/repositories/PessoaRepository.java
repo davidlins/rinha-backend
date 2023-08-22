@@ -29,23 +29,26 @@ public class PessoaRepository {
 
     public void save(Pessoa pessoa) throws SQLException {
 
+        var uuid = UUID.randomUUID().toString();
+        pessoa.setId(uuid);
+
+        var staks = (pessoa.getStack() != null && !pessoa.getStack().isEmpty()
+                ? pessoa.getStack().stream().collect(joining("|"))
+                : null);
+
+        var searchable = pessoa.getApelido().toLowerCase() + " " + pessoa.getNome().toLowerCase() + " "
+                + ((staks != null) ? staks.toLowerCase() : "");
         try (Connection conn = ds.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT,
                         Statement.RETURN_GENERATED_KEYS)) {
 
-            var staks = (pessoa.getStack() != null && !pessoa.getStack().isEmpty()
-                    ? pessoa.getStack().stream().collect(joining("|"))
-                    : null); 
-            
-            var uuid = UUID.randomUUID().toString();
-            pessoa.setId(uuid);
             pstmt.setString(1, uuid);
             pstmt.setString(2, pessoa.getApelido());
             pstmt.setString(3, pessoa.getNome());
             pstmt.setDate(4, Date.valueOf(pessoa.getNascimento()));
-            pstmt.setString(5,staks );
-            pstmt.setString(6,  pessoa.getApelido().toLowerCase() + " "+pessoa.getNome().toLowerCase()+ " "+((staks != null)? staks.toLowerCase(): ""));
-            
+            pstmt.setString(5, staks);
+            pstmt.setString(6, searchable);
+
             pstmt.executeUpdate();
         }
     }
@@ -58,8 +61,6 @@ public class PessoaRepository {
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(SQL_FIND_BY_ID + id + "'");) {
 
-            
-            
             if (rs.next()) {
 
                 String stack = rs.getString("stack");

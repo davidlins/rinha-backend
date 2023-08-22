@@ -13,7 +13,7 @@ CREATE TABLE pessoas (
 );
 
 
-CREATE INDEX text_searchable_idx ON pessoas USING GIST (text_searchable);
+-- CREATE INDEX text_searchable_idx ON pessoas USING GIST (text_searchable);
 
 
 
