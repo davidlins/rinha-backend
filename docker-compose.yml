@@ -17,11 +17,17 @@ services:
         limits:
           cpus: '0.7'
           memory: '0.9GB'
- 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --dbname=rinha --username=rinha"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+      start_period: 10s    
+
  api1: &api
-#    build:
-#        context: .
-    image: davidlins/rinha-backend-servlet
+    build:
+        context: .
+    #image: davidlins/rinha-backend-servlet
     container_name: api1
     hostname:  api1
     ulimits:
@@ -29,7 +35,8 @@ services:
         soft: 1000000
         hard: 1000000
     depends_on:
-        - dp
+     db:
+        condition: service_healthy
     deploy:
       resources:
         limits:
