@@ -160,7 +160,7 @@ public class PessoaServletAsync extends HttpServlet {
         AsyncContext async = request.startAsync();
 
         var termo = request.getParameter("t");
-        if (termo != null && termo.trim().length() > 0) {
+        if (termo != null) {
             try {
                 var pessoas = this.pessoaRepository.findByText(termo);
                 doResponse(async, response, OK.getCode(), pessoas, null);
