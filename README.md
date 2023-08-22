@@ -52,4 +52,3 @@ Se você quiser chupinhar também:
 *  [Claudson Oliveira](https://github.com/filhodanuvem/rinha-backend-2023-go)
 *  [Hugo Masques](https://github.com/hugomarques/rinha-backend-2023-q3-java)
  
-
