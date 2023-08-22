@@ -12,8 +12,6 @@ services:
     volumes:
       - ./db/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
     command: 'postgres -c max_connections=210 -c shared_buffers=256MB -c synchronous_commit=off -c fsync=off -c full_page_writes=off'  
-    ports:
-      - 5432:5432
     deploy:
       resources:
         limits:
@@ -21,9 +19,9 @@ services:
           memory: '0.9GB'
  
  api1: &api
-    build:
-        context: .
-    #image: davidlins/rinha-backend-servlet
+#    build:
+#        context: .
+    image: davidlins/rinha-backend-servlet
     container_name: api1
     hostname:  api1
     ulimits:
