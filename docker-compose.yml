@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.5"
 # Você terá 1.5 CPUs e 3.0GB 
 services:
  db:
@@ -25,9 +25,9 @@ services:
 #      start_period: 10s    
 
  api1: &api
-    build:
-        context: .
-    #image: davidlins/rinha-backend-servlet
+    #build:
+    #    context: .
+    image: davidlins/rinha-backend-servlet
     container_name: api1
     hostname:  api1
     ulimits:
