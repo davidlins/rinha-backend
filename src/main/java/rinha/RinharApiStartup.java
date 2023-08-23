@@ -18,7 +18,7 @@ public class RinharApiStartup {
 
         Thread.sleep(5000); // precisa remover depois de acertar o depends-on e retryconnection, pois com virtualthread esta subindo muito rapido 
 
-        var threadPool = new QueuedThreadPool(2000,1000);
+        var threadPool = new QueuedThreadPool(1000,500);
         threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
         var server = new Server(threadPool);
 
