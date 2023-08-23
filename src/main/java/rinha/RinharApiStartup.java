@@ -16,7 +16,9 @@ public class RinharApiStartup {
 
     public static void main(String[] args) throws Exception {
 
-        var threadPool = new QueuedThreadPool(1000);
+        Thread.sleep(5000); // precisa remover depois de acertar o depends-on e retryconnection, pois com virtualthread esta subindo muito rapido 
+
+        var threadPool = new QueuedThreadPool(2000,1000);
         threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
         var server = new Server(threadPool);
 
@@ -32,7 +34,6 @@ public class RinharApiStartup {
         var context = new ServletContextHandler("/");
         server.setHandler(context);
 
-        Thread.sleep(5000); // precisa remover depois de acertar o depends-on e retryconnection, pois com virtualthread esta subindo muito rapido 
 
         var servletHolder = new ServletHolder("PessoaServlet", PessoaServletAsync.class);
         servletHolder.setInitOrder(1);
