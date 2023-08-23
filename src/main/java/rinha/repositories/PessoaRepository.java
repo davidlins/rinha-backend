@@ -29,6 +29,7 @@ public class PessoaRepository {
 
     public void save(Pessoa pessoa) throws SQLException {
 
+        
         var uuid = UUID.randomUUID().toString();
         pessoa.setId(uuid);
 
@@ -38,6 +39,7 @@ public class PessoaRepository {
 
         var searchable = pessoa.getApelido().toLowerCase() + " " + pessoa.getNome().toLowerCase() + " "
                 + ((staks != null) ? staks.toLowerCase() : "");
+        
         try (Connection conn = ds.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT,
                         Statement.RETURN_GENERATED_KEYS)) {

@@ -17,12 +17,6 @@ services:
         limits:
           cpus: '0.7'
           memory: '0.9GB'
-#    healthcheck:
-#      test: ["CMD-SHELL", "pg_isready --dbname=rinha --username=rinha"]
-#      interval: 20s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s    
 
  api1: &api
     build:
@@ -34,9 +28,8 @@ services:
       nofile:
         soft: 1000000
         hard: 1000000
-    depends_on:
-     db:
-        condition: service_completed_successfully
+   # depends_on:
+   #  - db
     deploy:
       resources:
         limits:
