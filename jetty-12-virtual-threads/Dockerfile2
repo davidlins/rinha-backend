@@ -1,0 +1,29 @@
+FROM maven:3.9.3-eclipse-temurin-20-alpine as build
+
+WORKDIR /app
+COPY src /app/src
+COPY pom.xml /app
+
+RUN mvn clean package -DskipTests assembly:single
+
+FROM eclipse-temurin:20-jdk-alpine
+
+COPY --from=build /app/target/rinha-backend-jetty-servlet-jar-with-dependencies.jar rinha-backend-jetty-servlet-jar-with-dependencies.jar 
+
+EXPOSE 8080
+ENTRYPOINT [ "java","--enable-preview", "-jar", "rinha-backend-jetty-servlet-jar-with-dependencies.jar" ]
+
+ENV JETTY_HOME /usr/local/jetty
+ENV JETTY_BASE /var/lib/jetty
+
+RUN set -xe ; \
+
+mkdir -p $JETTY_HOME
+tar -xvzf * <(wget -q -O - https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-home/12.0.0/jetty-home-12.0.0.tar.gz)
+mv jetty-home-12.0.0/* $JETTY_HOME
+rm -rf jetty-home-12.0.0
+java -jar "$JETTY_HOME/start.jar" --create-startd --add-modules=server,http,ext,resources,ee10-deploy,ee10-webapp,ee10-annotations
+cd $JETTY_HOME
+
+
+

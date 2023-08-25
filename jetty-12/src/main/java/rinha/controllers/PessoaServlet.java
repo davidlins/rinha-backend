@@ -22,6 +22,7 @@ import com.alibaba.fastjson2.JSONException;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ import rinha.models.Pessoa;
 import rinha.models.ResponseError;
 import rinha.repositories.PessoaRepository;
 
-@WebServlet(name = "PessoaServlet", urlPatterns = { "/pessoas/*", "/contagem-pessoas" }, loadOnStartup = 1)
+@WebServlet(name = "PessoaServlet", urlPatterns = { "/pessoas/*", "/contagem-pessoas" }, loadOnStartup = 1,asyncSupported = true)
 public class PessoaServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -40,8 +41,8 @@ public class PessoaServlet extends HttpServlet {
 
     private PessoaRepository pessoaRepository;
     private Validator validator;
-    private Map<String, Pessoa> pessoasMap = new ConcurrentHashMap<>();
-    private Set<String> apelidos = Collections.synchronizedSet(new HashSet<>());
+    private static Map<String, Pessoa> pessoasMap = new ConcurrentHashMap<>();
+    private static Set<String> apelidos = Collections.synchronizedSet(new HashSet<>());
 
     public PessoaServlet() {
         super();
@@ -69,9 +70,7 @@ public class PessoaServlet extends HttpServlet {
     private void insert(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        //AsyncContext async = request.startAsync();
-        AsyncContext async = null;
-
+        AsyncContext async = request.startAsync();
 
         try {
 
@@ -87,7 +86,7 @@ public class PessoaServlet extends HttpServlet {
                             singletonMap("Location", "/pessoas/" + pessoa.getId()));
                 } catch (SQLException e) {
 
-                     e.printStackTrace();
+                    // e.printStackTrace();
                     var httpStatus = INTERNAL_SERVER_ERRORS;
                     if (e.getMessage().indexOf("pessoas_apelido_key") >= 0) {
                         httpStatus = UNPROCESSABLE_CONTENT;
@@ -119,9 +118,7 @@ public class PessoaServlet extends HttpServlet {
 
     private void show(String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        //AsyncContext async = request.startAsync();
-        AsyncContext async = null;
-
+        AsyncContext async = request.startAsync();
 
         try {
             var pessoa = pessoasMap.get(id);
@@ -155,9 +152,7 @@ public class PessoaServlet extends HttpServlet {
 
     private void list(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        //AsyncContext async = request.startAsync();
-        AsyncContext async = null;
-
+        AsyncContext async = request.startAsync();
 
         var termo = request.getParameter("t");
         if (termo != null) {
@@ -185,32 +180,27 @@ public class PessoaServlet extends HttpServlet {
 
     private void count(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        //AsyncContext async = request.startAsync();
-        AsyncContext async = null;
+        AsyncContext async = request.startAsync();
 
-        
         try {
             var count = this.pessoaRepository.count();
 
             ServletOutputStream out = response.getOutputStream();
-            response.setStatus(OK.getCode());
-            out.print(count);
-            
-//            out.setWriteListener(new WriteListener() {
-//                @Override
-//                public void onWritePossible() throws IOException {
-//
-//                    response.setStatus(OK.getCode());
-//                    out.print(count);
-////                    async.complete();
-//                }
-//
-//                @Override
-//                public void onError(Throwable t) {
-//                    getServletContext().log("Async Error", t);
-////                    async.complete();
-//                }
-//            });
+            out.setWriteListener(new WriteListener() {
+                @Override
+                public void onWritePossible() throws IOException {
+
+                    response.setStatus(OK.getCode());
+                    out.print(count);
+                    async.complete();
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    getServletContext().log("Async Error", t);
+                    async.complete();
+                }
+            });
 
         } catch (SQLException e) {
             // e.printStackTrace();
@@ -241,17 +231,29 @@ public class PessoaServlet extends HttpServlet {
     private void doResponse(AsyncContext async, HttpServletResponse response, int httpStatusCode, Object bodyObject,
             Map<String, String> headerMap) throws IOException {
 
-        if (headerMap != null) {
-            headerMap.forEach((key, value) -> response.addHeader(key, value));
-        }
-        
         ServletOutputStream out = response.getOutputStream();
-        response.setStatus(httpStatusCode);
-        response.setContentType(JSON_CONTENT_TYPE);
-        if (bodyObject != null) {
-            JSON.writeTo(out, bodyObject);
-        } else {
-            out.print("{}");
-        }
+        out.setWriteListener(new WriteListener() {
+            @Override
+            public void onWritePossible() throws IOException {
+
+                if (headerMap != null) {
+                    headerMap.forEach((key, value) -> response.addHeader(key, value));
+                }
+                response.setStatus(httpStatusCode);
+                response.setContentType(JSON_CONTENT_TYPE);
+                if (bodyObject != null) {
+                    JSON.writeTo(out, bodyObject);
+                } else {
+                    out.print("{}");
+                }
+                async.complete();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                getServletContext().log("Async Error", t);
+                async.complete();
+            }
+        });
     }
 }

@@ -1,4 +1,23 @@
-FROM maven:3.9.3-eclipse-temurin-17-alpine as build
+FROM maven:3.9.3-eclipse-temurin-20-alpine as build
+
+ENV JETTY_HOME /usr/local/jetty
+ENV JETTY_BASE /var/lib/jetty
+
+RUN set -xe ; \
+    
+    mkdir -p $JETTY_HOME; \
+    mkdir -p $JETTY_BASE; \
+    
+    cd $JETTY_BASE; \
+     
+    wget https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-home/12.0.0/jetty-home-12.0.0.tar.gz; \
+    tar -xzvf jetty-home-12.0.0.tar.gz; \
+    mv jetty-home-12.0.0/* $JETTY_HOME; \
+    
+    java -jar $JETTY_HOME/start.jar --add-modules=server,http,ext,resources,ee10-deploy,ee10-webapp,ee10-annotations,threadpool-virtual-preview,http; \
+     
+    rm -rf jetty-home-12.0.0.tar.gz; \
+    rm -rf jetty-home-12.0.0; 
 
 WORKDIR /app
 COPY src /app/src
@@ -6,11 +25,11 @@ COPY pom.xml /app
 
 RUN mvn clean package -DskipTests
 
-FROM jetty:12.0.0-jdk17-alpine
+RUN set -xe ; \
+    cp /app/target/rinha-backend-jetty-servlet.war $JETTY_BASE/webapps/ROOT.war; \
+    rm -rf /app;
 
-COPY --from=build --chown=jetty:jetty /app/target/rinha-backend-jetty-servlet.war $JETTY_BASE/webapps/ROOT.war 
-
-RUN java -jar /usr/local/jetty/start.jar --add-modules=ee10-deploy,ee10-webapp,ee10-annotations 
+WORKDIR $JETTY_BASE
 
 EXPOSE 8080
-CMD ["java","-jar","/usr/local/jetty/start.jar"] 
+CMD ["java","--enable-preview","-jar","/usr/local/jetty/start.jar"] 
