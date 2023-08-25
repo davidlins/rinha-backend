@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v3
-    - run: docker build ./jetty-12/Dockerfile
+    #- run: docker build ./jetty-12/Dockerfile
     - run: docker-compose -f ./jetty-12/docker-compose-github.yml up -d
     - name: Load test
       run: |
