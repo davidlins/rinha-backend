@@ -32,7 +32,7 @@ jobs:
     - run: |
         # replace string DESCRICAO with the commit sha in file index.html inside GATLING OUTPUT FOLDER
         sed -i "s/DESCRICAO/${{ github.sha }}/g" ${{ github.workspace }}/rinha-de-backend-2023-q3/stress-test/user-files/results/${{ env.GATLING_OUTPUT_FOLDER }}/index.html
-    - run: docker-compose -f ./jetty-12/docker-compose-github.yml up -d down
+    - run: docker-compose -f ./jetty-12/docker-compose-github.yml down
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
