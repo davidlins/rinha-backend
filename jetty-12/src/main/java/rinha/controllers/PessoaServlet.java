@@ -11,6 +11,7 @@ import static rinha.controllers.HttpStatus.UNPROCESSABLE_CONTENT;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -41,9 +42,13 @@ public class PessoaServlet extends HttpServlet {
 
     private PessoaRepository pessoaRepository;
     private Validator validator;
-    private static Map<String, Pessoa> pessoasMap = new ConcurrentHashMap<>();
-    private static Set<String> apelidos = Collections.synchronizedSet(new HashSet<>());
+//    private static Map<String, Pessoa> pessoasMap = new ConcurrentHashMap<>();
+//    private static Set<String> apelidos = Collections.synchronizedSet(new HashSet<>());
 
+    private static Map<String, Pessoa> pessoasMap = new HashMap<>();
+    private static Set<String> apelidos = new HashSet<String>();
+
+    
     public PessoaServlet() {
         super();
         this.pessoaRepository = new PessoaRepository();
