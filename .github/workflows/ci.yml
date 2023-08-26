@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         lib:
-          - { project: jetty-12 }
+          - { project: jetty-12-embeed-virtual-threads }
     #      - { project: jetty-12-virtual-threads }
     steps:
     - uses: actions/checkout@v3
@@ -41,10 +41,10 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ${{ github.workspace }}/rinha-de-backend-2023-q3/stress-test/user-files/results/${{ env.GATLING_OUTPUT_FOLDER }}  
-        destination_dir: ${{ env.GATLING_OUTPUT_FOLDER }}
+        publish_dir: ${{ github.workspace }}/rinha-de-backend-2023-q3/stress-test/user-files/results/${{ env.GATLING_OUTPUT_FOLDER }}/${{ matrix.lib.project }}
+        destination_dir: ${{ env.GATLING_OUTPUT_FOLDER }}/${{ matrix.lib.project }}
     - run: echo "GH_REPO=$(echo ${{ github.repository }} | cut -d "/" -f 2)" >> $GITHUB_ENV
-    - run: echo "[Deploying to https://${{ github.repository_owner }}.github.io/${{ env.GH_REPO }}/${{ env.GATLING_OUTPUT_FOLDER }}](https://${{ github.repository_owner }}.github.io/${{ env.GH_REPO }}/${{ env.GATLING_OUTPUT_FOLDER }})" >> "${GITHUB_STEP_SUMMARY}"
+    - run: echo "[Deploying to https://${{ github.repository_owner }}.github.io/${{ env.GH_REPO }}/${{ env.GATLING_OUTPUT_FOLDER }}/${{ matrix.lib.project }}](https://${{ github.repository_owner }}.github.io/${{ env.GH_REPO }}/${{ env.GATLING_OUTPUT_FOLDER }}/${{ matrix.lib.project }})" >> "${GITHUB_STEP_SUMMARY}"
 
     
     
