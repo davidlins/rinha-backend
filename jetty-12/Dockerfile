@@ -14,10 +14,12 @@ RUN set -xe ; \
     tar -xzvf jetty-home-12.0.0.tar.gz; \
     mv jetty-home-12.0.0/* $JETTY_HOME; \
     
-    java -jar $JETTY_HOME/start.jar --add-modules=server,http,ext,resources,ee10-deploy,ee10-webapp,ee10-annotations,threadpool-virtual-preview,http; \
+    java -jar $JETTY_HOME/start.jar --add-modules=server,http,ext,resources,ee10-deploy,ee10-webapp,ee10-annotations,threadpool-virtual-preview,logging/slf4j; \
      
     rm -rf jetty-home-12.0.0.tar.gz; \
     rm -rf jetty-home-12.0.0; 
+
+COPY ./jetty-config/threadpool-virtual-preview.ini ${JETTY_BASE}/start.d
 
 WORKDIR /app
 COPY src /app/src
@@ -32,4 +34,4 @@ RUN set -xe ; \
 WORKDIR $JETTY_BASE
 
 EXPOSE 8080
-CMD ["java","--enable-preview","-jar","/usr/local/jetty/start.jar"] 
+CMD ["java",  "-XX:+UseParallelGC", "-XX:MaxRAMPercentage=75","--enable-preview","-jar","/usr/local/jetty/start.jar"] 

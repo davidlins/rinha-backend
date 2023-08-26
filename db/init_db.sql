@@ -1,3 +1,5 @@
+CREATE EXTENSION btree_gist;
+
 CREATE TABLE pessoas (
 	id VARCHAR(40) PRIMARY KEY,
 	apelido VARCHAR(32) NOT NULL,
@@ -7,3 +9,5 @@ CREATE TABLE pessoas (
 	text_searchable TEXT NULL,
 	UNIQUE(apelido)
 );
+
+CREATE INDEX  CONCURRENTLY text_searchable_idx ON pessoas USING GIST (text_searchable); 

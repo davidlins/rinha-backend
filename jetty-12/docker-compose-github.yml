@@ -22,10 +22,6 @@ services:
         context: .
     container_name: api1
     hostname:  api1
-    ulimits:
-      nofile:
-        soft: 1000000
-        hard: 1000000
     depends_on:
        - db
     deploy:
