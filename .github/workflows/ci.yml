@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     #- run: docker build ./jetty-12/Dockerfile
-    - run: docker-compose -f ./jetty-12/docker-compose-github.yml up -d
+    - run: docker-compose -f ./jetty-12/docker-compose.yml up -d
     - name: Load test
       run: |
         git clone --single-branch --quiet https://github.com/zanfranceschi/rinha-de-backend-2023-q3
