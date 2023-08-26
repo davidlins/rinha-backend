@@ -15,11 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         lib:
-        jetty-12-embeed-virtual-threads/Dockerfile
-        jetty-12-embeed-virtual-threads/Dockerfile
-
           - { project: jetty-12-embeed-virtual-threads }
-    #      - { project: jetty-12-virtual-threads }
+    #     - { project: jetty-12-virtual-threads }
     steps:
     - uses: actions/checkout@v3
     - run: docker build ./${{ matrix.lib.project }}
