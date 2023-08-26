@@ -1,43 +1,12 @@
-# Rinha de Backend
+# Rinha de Backend - Java
 
 O [@zanfranceschi](https://twitter.com/zanfranceschi) lançou a braba no twitter e a galera da bolhadev abraçou.
 
 Na hora pensei, vou fazer sem framework, so servlet e jdbc e nasceu essa bagaça. Mas teve maluco que fez em [bash](https://github.com/leandronsp/rinha-backend-bash)
 
-## Desafio
+Aqui esta o projeto que entreguei [jetty-12-embeed-virtual-threads:1.0.0-entgreque](https://github.com/davidlins/rinha-backend/tree/1.0.0-entgreque/jetty-12-embeed-virtual-threads) 
 
-Para mais detalhes: [rinha do backend](https://github.com/zanfranceschi/rinha-de-backend-2023-q3)
-
-## Requirements
-
-* [OpenJDK JDK 20](https://jdk.java.net/20)
-* [Maven 3.9.3](https://maven.apache.org/)
-* [Podman Compose](https://github.com/containers/podman-compose) ou [Docker Compose](https://docs.docker.com/compose/)
-* [Gatling](https://gatling.io/open-source/)
-
-## Stack
-
-* [Jakarta Servlet 6.0](https://jakarta.ee/specifications/servlet/6.0/)
-* [PostgreSQL](https://www.postgresql.org/)
-* [NGINX](https://www.nginx.com/)
-* [Jetty](https://projects.eclipse.org/projects/rt.jetty/releases/12.0)
-
-
-## Subindo o ambiente
-
-```bash
-$ podman-compose up -d
-
-```
-
-## Torando a Api
-
-Instale o [Gatling](https://gatling.io/open-source/) e altere a variável "GATLING_BIN_DIR" no arquivo stress-test/run-test.sh
-
-```bash
-$ cd stress-test 
-$ ./run-test.sh
-```
+Após a entrega, pernsei porque não fazer uma rinha backend java? Então esse projeto evoluiu pra isso. 
 
 ## Agradecimentos
 
