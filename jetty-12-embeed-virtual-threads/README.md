@@ -4,6 +4,10 @@ O [@zanfranceschi](https://twitter.com/zanfranceschi) lançou a braba no twitter
 
 Na hora pensei, vou fazer sem framework, so servlet e jdbc e nasceu essa bagaça. Mas teve maluco que fez em [bash](https://github.com/leandronsp/rinha-backend-bash)
 
+
+![Alt text](image.png)
+Relatorio: [gatling](https://davidlins.github.io/rinha-backend/rinhabackendsimulation-20230823125535906/)
+
 ## Desafio
 
 Para mais detalhes: [rinha do backend](https://github.com/zanfranceschi/rinha-de-backend-2023-q3)
