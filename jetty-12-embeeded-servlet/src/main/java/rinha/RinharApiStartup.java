@@ -16,13 +16,9 @@ public class RinharApiStartup {
 
     public static void main(String[] args) throws Exception {
 
-        Thread.sleep(5000); // precisa remover depois de acertar o depends-on e retryconnection, pois com virtualthread esta subindo muito rapido 
-
         var threadPool = new QueuedThreadPool(1000,500);
         threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
         var server = new Server(threadPool);
-
-//        var server = new Server();
 
         var httpPort = (System.getProperties().containsKey(HTTP_PORT_KEY)) ? System.getProperty(HTTP_PORT_KEY)
                 : System.getenv("http.port");
