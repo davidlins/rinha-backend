@@ -16,7 +16,6 @@ public class RinharApiStartup {
 
     public static void main(String[] args) throws Exception {
 
-        var threadPool = new QueuedThreadPool(1000,500);
         threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
         var server = new Server(threadPool);
 
