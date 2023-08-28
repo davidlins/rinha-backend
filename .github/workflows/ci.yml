@@ -15,8 +15,9 @@ jobs:
       fail-fast: false
       matrix:
         lib:
-          - { project: jetty-12-embeed-virtual-threads }
-    #     - { project: jetty-12-virtual-threads }
+          - { project: jetty-12-embeeded-handler }
+          - { project: jetty-12-embeeded-servlet }
+          - { project: jetty-12-servlet }
     steps:
     - uses: actions/checkout@v3
     - run: docker build ./${{ matrix.lib.project }}
