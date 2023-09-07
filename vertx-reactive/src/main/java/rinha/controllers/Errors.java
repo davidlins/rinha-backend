@@ -1,7 +1,7 @@
-package rinha.controller;
+package rinha.controllers;
 
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.RoutingContext;
+import io.vertx.rxjava3.ext.web.RoutingContext;
 
 /**
  * @author <a href="http://escoffier.me">Clement Escoffier</a>

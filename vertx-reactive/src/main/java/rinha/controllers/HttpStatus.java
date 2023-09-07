@@ -1,4 +1,4 @@
-package rinha.controller;
+package rinha.controllers;
 
 import lombok.Getter;
 
