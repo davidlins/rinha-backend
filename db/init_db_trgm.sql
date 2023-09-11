@@ -1,4 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS  btree_gist;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 CREATE TABLE pessoas (
@@ -11,5 +10,4 @@ CREATE TABLE pessoas (
 	UNIQUE(apelido)
 );
 
--- CREATE INDEX  CONCURRENTLY text_searchable_idx ON pessoas USING GIST (text_searchable); 
 CREATE INDEX text_searchable_idx ON pessoas USING GIST (text_searchable gist_trgm_ops);
