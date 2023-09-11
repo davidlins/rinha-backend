@@ -12,6 +12,10 @@ import rinha.repositories.PessoaRepository;
 
 public class MainVerticle extends AbstractVerticle {
 
+    private static final String HTTP_PORT_KEY = "http.port";
+    private static final String POSTGRES_PORT_HOST = "postgres.host";
+    private static final String POSTGRES_CONNECTION_SIZE = "postgres.connection.size";
+            
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
 
@@ -26,20 +30,35 @@ public class MainVerticle extends AbstractVerticle {
         router.get("/pessoas").handler(pessoaController::list);
         router.get("/contagem-pessoas").handler(pessoaController::count);
 
-        server.requestHandler(router).listen(8080);
+        var httpPort = (System.getProperties().containsKey(HTTP_PORT_KEY)) ? System.getProperty(HTTP_PORT_KEY)
+                : System.getenv(HTTP_PORT_KEY);
+        
+        server.requestHandler(router).listen((httpPort != null) ? Integer.valueOf(httpPort):  8080);
 
     }
 
     PessoaRepository createPessoaRepository() {
-
+        
+        var postgresHost = (System.getProperties().containsKey(POSTGRES_PORT_HOST)) ? System.getProperty(POSTGRES_PORT_HOST)
+                : System.getenv(POSTGRES_PORT_HOST);
+       
+        
+        var postgresConnectionSize = (System.getProperties().containsKey(POSTGRES_CONNECTION_SIZE)) ? System.getProperty(POSTGRES_CONNECTION_SIZE)
+                : System.getenv(POSTGRES_CONNECTION_SIZE);
+        
         var connectOptions = new PgConnectOptions()
                 .setPort(5432)
-                .setHost("postgres")
+                .setHost(postgresHost)
                 .setDatabase("rinha")
                 .setUser("rinha")
                 .setPassword("rinha");
 
-        var poolOptions = new PoolOptions().setMaxSize(150);
+        
+        
+        var poolOptions = new PoolOptions();
+        if(postgresConnectionSize != null) {
+               poolOptions.setMaxSize(Integer.valueOf(postgresConnectionSize));
+        }
 
         return new PessoaRepository(PgPool.pool(vertx, connectOptions, poolOptions));
     }

@@ -15,48 +15,46 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.7'
-          memory: '1GB'
+          cpus: '0.9'
+          memory: '1.1GB'
  
  api1:
     build:
       context: .
     container_name: api1
     hostname:  api1
-    ulimits:
-      nofile:
-        soft: 1000000
-        hard: 1000000
     depends_on:
         - db
     deploy:
       resources:
         limits:
-          cpus: '0.35'
-          memory: '0.9GB'
+          cpus: '0.25'
+          memory: '0.8GB'
+    environment:
+      postgres.host: postgres 
+      postgres.connection.size: 150      
 
  api2:
     build:
       context: .
     container_name: api2
     hostname:  api2
-    ulimits:
-      nofile:
-        soft: 1000000
-        hard: 1000000
     depends_on:
         - db
     deploy:
       resources:
         limits:
-          cpus: '0.35'
-          memory: '0.9GB'
+          cpus: '0.25'
+          memory: '0.8GB'
+    environment:
+      postgres.host: postgres 
+      postgres.connection.size: 150      
 
  nginx:
     image: nginx 
     container_name: nginx
     volumes:
-      - ../nginx/nginx-1.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
         - api1
         - api2
