@@ -10,7 +10,7 @@ FROM eclipse-temurin:20-jdk-alpine
 
 COPY --from=build /app/target/*-fat.jar rinha-backend-java.jar 
 
-EXPOSE 8080
-EXPOSE 8081
+#EXPOSE 8080
+#EXPOSE 8085
 ENTRYPOINT [ "java","--enable-preview", "-jar", "rinha-backend-java.jar"]
 

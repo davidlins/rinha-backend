@@ -26,6 +26,13 @@ services:
       context: .
     container_name: api1
     hostname:  api1
+    environment:
+      http.port:  8085
+      postgres.host: localhost 
+      postgres.connection.size: 45
+    ports:
+      - '8085:8080'
+    network_mode: host        
     depends_on:
         - db
     deploy:
@@ -33,19 +40,19 @@ services:
         limits:
           cpus: '0.35'
           memory: '0.8GB'
-    environment:
-      http.port:  8080
-      postgres.host: localhost 
-      postgres.connection.size: 45
-    ports:
-      - '8080:8080'
-    network_mode: host        
-    
+   
  api2:
     build:
       context: .
     container_name: api2
     hostname:  api2
+    environment:
+      http.port:  8081
+      postgres.host: localhost 
+      postgres.connection.size: 45
+    ports:
+      - '8081:8080'
+    network_mode: host
     depends_on:
         - db
     deploy:
@@ -53,13 +60,7 @@ services:
         limits:
           cpus: '0.35'
           memory: '0.8GB'
-    environment:
-      http.port:  8081
-      postgres.host: localhost 
-      postgres.connection.size: 45
-    ports:
-      - '8081:8081'
-    network_mode: host
+    
  
  nginx:
     image: nginx 
