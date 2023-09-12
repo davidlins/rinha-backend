@@ -3,6 +3,7 @@ package rinha;
 import io.vertx.core.Promise;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.rxjava3.core.AbstractVerticle;
+import io.vertx.rxjava3.core.Vertx;
 import io.vertx.rxjava3.ext.web.Router;
 import io.vertx.rxjava3.ext.web.handler.BodyHandler;
 import io.vertx.rxjava3.pgclient.PgPool;
@@ -15,7 +16,12 @@ public class MainVerticle extends AbstractVerticle {
     private static final String HTTP_PORT_KEY = "http.port";
     private static final String POSTGRES_PORT_HOST = "postgres.host";
     private static final String POSTGRES_CONNECTION_SIZE = "postgres.connection.size";
-            
+           
+    
+    public static void main(String[] args) {
+        Vertx.vertx().deployVerticle(new MainVerticle());
+    }
+    
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
 
