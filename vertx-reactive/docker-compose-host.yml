@@ -11,11 +11,11 @@ services:
       POSTGRES_DB: rinha
     volumes:
       - ../db/init_db_trgm.sql:/docker-entrypoint-initdb.d/init_db.sql
-    command: 'postgres -c max_connections=310 -c shared_buffers=256MB -c synchronous_commit=off -c fsync=off -c full_page_writes=off'  
+    command: 'postgres -c max_connections=110 -c shared_buffers=256MB -c synchronous_commit=off -c fsync=off -c full_page_writes=off'  
     deploy:
       resources:
         limits:
-          cpus: '0.8'
+          cpus: '0.7'
           memory: '1.1GB'
     ports:
       - '5432:5432'
@@ -31,12 +31,12 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.3'
+          cpus: '0.35'
           memory: '0.8GB'
     environment:
       http.port:  8080
       postgres.host: localhost 
-      postgres.connection.size: 150
+      postgres.connection.size: 45
     ports:
       - '8080:8080'
     network_mode: host        
@@ -51,12 +51,12 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.3'
+          cpus: '0.35'
           memory: '0.8GB'
     environment:
       http.port:  8081
       postgres.host: localhost 
-      postgres.connection.size: 150
+      postgres.connection.size: 45
     ports:
       - '8081:8081'
     network_mode: host
